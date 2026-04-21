@@ -1,0 +1,5 @@
+- Restaurant (restaurant): restaurant_name[string/text], restaurant_tel[string/tel], restaurant_url[string/url], lieferzeit[string/text], mindestbestellwert[number], lieferkosten[number], hinweise[string/textarea]
+- Gerichte (gerichte): restaurant_ref[applookup/select], gericht_name[string/text], kategorie[lookup/select], beschreibung[string/textarea], preis[number], vegetarisch[bool], vegan[bool], allergene[string/text]
+  → restaurant_ref links to app_id 69e742df70dfb1e5316788c9
+- Bestellungen (bestellungen): vorname[string/text], nachname[string/text], gewaehlte_gerichte[applookup/select], sonderwunsch[string/textarea], zahlungsart[lookup/radio], bereits_bezahlt[bool]
+  → gewaehlte_gerichte links to app_id 69e742e2cf5fc9c325cecbe7

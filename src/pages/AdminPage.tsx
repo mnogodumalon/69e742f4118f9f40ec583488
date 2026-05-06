@@ -1,11 +1,11 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useDashboardData } from '@/hooks/useDashboardData';
-import type { Restaurant, Gerichte, Bestellungen } from '@/types/app';
+import type { Gerichte, Restaurant, Bestellungen } from '@/types/app';
 import { LivingAppsService, extractRecordId, cleanFieldsForApi } from '@/services/livingAppsService';
-import { RestaurantDialog } from '@/components/dialogs/RestaurantDialog';
-import { RestaurantViewDialog } from '@/components/dialogs/RestaurantViewDialog';
 import { GerichteDialog } from '@/components/dialogs/GerichteDialog';
 import { GerichteViewDialog } from '@/components/dialogs/GerichteViewDialog';
+import { RestaurantDialog } from '@/components/dialogs/RestaurantDialog';
+import { RestaurantViewDialog } from '@/components/dialogs/RestaurantViewDialog';
 import { BestellungenDialog } from '@/components/dialogs/BestellungenDialog';
 import { BestellungenViewDialog } from '@/components/dialogs/BestellungenViewDialog';
 import { BulkEditDialog } from '@/components/dialogs/BulkEditDialog';
@@ -27,15 +27,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { IconPencil, IconTrash, IconPlus, IconFilter, IconX, IconArrowsUpDown, IconArrowUp, IconArrowDown, IconSearch, IconCopy } from '@tabler/icons-react';
 
 // Field metadata per entity for bulk edit and column filters
-const RESTAURANT_FIELDS = [
-  { key: 'restaurant_name', label: 'Restaurantname', type: 'string/text' },
-  { key: 'restaurant_tel', label: 'Telefonnummer', type: 'string/tel' },
-  { key: 'restaurant_url', label: 'Website / Speisekarte', type: 'string/url' },
-  { key: 'lieferzeit', label: 'Lieferzeit (in Minuten)', type: 'string/text' },
-  { key: 'mindestbestellwert', label: 'Mindestbestellwert (€)', type: 'number' },
-  { key: 'lieferkosten', label: 'Lieferkosten (€)', type: 'number' },
-  { key: 'hinweise', label: 'Hinweise', type: 'string/textarea' },
-];
 const GERICHTE_FIELDS = [
   { key: 'restaurant_ref', label: 'Restaurant', type: 'applookup/select', targetEntity: 'restaurant', targetAppId: 'RESTAURANT', displayField: 'restaurant_name' },
   { key: 'gericht_name', label: 'Gerichtsbezeichnung', type: 'string/text' },
@@ -45,6 +36,15 @@ const GERICHTE_FIELDS = [
   { key: 'vegetarisch', label: 'Vegetarisch', type: 'bool' },
   { key: 'vegan', label: 'Vegan', type: 'bool' },
   { key: 'allergene', label: 'Allergene / Hinweise', type: 'string/text' },
+];
+const RESTAURANT_FIELDS = [
+  { key: 'restaurant_name', label: 'Restaurantname', type: 'string/text' },
+  { key: 'restaurant_tel', label: 'Telefonnummer', type: 'string/tel' },
+  { key: 'restaurant_url', label: 'Website / Speisekarte', type: 'string/url' },
+  { key: 'lieferzeit', label: 'Lieferzeit (in Minuten)', type: 'string/text' },
+  { key: 'mindestbestellwert', label: 'Mindestbestellwert (€)', type: 'number' },
+  { key: 'lieferkosten', label: 'Lieferkosten (€)', type: 'number' },
+  { key: 'hinweise', label: 'Hinweise', type: 'string/textarea' },
 ];
 const BESTELLUNGEN_FIELDS = [
   { key: 'vorname', label: 'Vorname', type: 'string/text' },
@@ -56,8 +56,8 @@ const BESTELLUNGEN_FIELDS = [
 ];
 
 const ENTITY_TABS = [
-  { key: 'restaurant', label: 'Restaurant', pascal: 'Restaurant' },
   { key: 'gerichte', label: 'Gerichte', pascal: 'Gerichte' },
+  { key: 'restaurant', label: 'Restaurant', pascal: 'Restaurant' },
   { key: 'bestellungen', label: 'Bestellungen', pascal: 'Bestellungen' },
 ] as const;
 
@@ -67,15 +67,15 @@ export default function AdminPage() {
   const data = useDashboardData();
   const { loading, error, fetchAll } = data;
 
-  const [activeTab, setActiveTab] = useState<EntityKey>('restaurant');
+  const [activeTab, setActiveTab] = useState<EntityKey>('gerichte');
   const [selectedIds, setSelectedIds] = useState<Record<EntityKey, Set<string>>>(() => ({
-    'restaurant': new Set(),
     'gerichte': new Set(),
+    'restaurant': new Set(),
     'bestellungen': new Set(),
   }));
   const [filters, setFilters] = useState<Record<EntityKey, Record<string, string>>>(() => ({
-    'restaurant': {},
     'gerichte': {},
+    'restaurant': {},
     'bestellungen': {},
   }));
   const [showFilters, setShowFilters] = useState(false);
@@ -91,8 +91,8 @@ export default function AdminPage() {
 
   const getRecords = useCallback((entity: EntityKey) => {
     switch (entity) {
-      case 'restaurant': return (data as any).restaurant as Restaurant[] ?? [];
       case 'gerichte': return (data as any).gerichte as Gerichte[] ?? [];
+      case 'restaurant': return (data as any).restaurant as Restaurant[] ?? [];
       case 'bestellungen': return (data as any).bestellungen as Bestellungen[] ?? [];
       default: return [];
     }
@@ -130,8 +130,8 @@ export default function AdminPage() {
 
   const getFieldMeta = useCallback((entity: EntityKey) => {
     switch (entity) {
-      case 'restaurant': return RESTAURANT_FIELDS;
       case 'gerichte': return GERICHTE_FIELDS;
+      case 'restaurant': return RESTAURANT_FIELDS;
       case 'bestellungen': return BESTELLUNGEN_FIELDS;
       default: return [];
     }
@@ -227,15 +227,15 @@ export default function AdminPage() {
 
   const getServiceMethods = useCallback((entity: EntityKey) => {
     switch (entity) {
-      case 'restaurant': return {
-        create: (fields: any) => LivingAppsService.createRestaurantEntry(fields),
-        update: (id: string, fields: any) => LivingAppsService.updateRestaurantEntry(id, fields),
-        remove: (id: string) => LivingAppsService.deleteRestaurantEntry(id),
-      };
       case 'gerichte': return {
         create: (fields: any) => LivingAppsService.createGerichteEntry(fields),
         update: (id: string, fields: any) => LivingAppsService.updateGerichteEntry(id, fields),
         remove: (id: string) => LivingAppsService.deleteGerichteEntry(id),
+      };
+      case 'restaurant': return {
+        create: (fields: any) => LivingAppsService.createRestaurantEntry(fields),
+        update: (id: string, fields: any) => LivingAppsService.updateRestaurantEntry(id, fields),
+        remove: (id: string) => LivingAppsService.deleteRestaurantEntry(id),
       };
       case 'bestellungen': return {
         create: (fields: any) => LivingAppsService.createBestellungenEntry(fields),
@@ -569,16 +569,6 @@ export default function AdminPage() {
         </Table>
       </div>
 
-      {(createEntity === 'restaurant' || dialogState?.entity === 'restaurant') && (
-        <RestaurantDialog
-          open={createEntity === 'restaurant' || dialogState?.entity === 'restaurant'}
-          onClose={() => { setCreateEntity(null); setDialogState(null); }}
-          onSubmit={dialogState?.entity === 'restaurant' ? handleUpdate : (fields: any) => handleCreate('restaurant', fields)}
-          defaultValues={dialogState?.entity === 'restaurant' ? dialogState.record?.fields : undefined}
-          enablePhotoScan={AI_PHOTO_SCAN['Restaurant']}
-          enablePhotoLocation={AI_PHOTO_LOCATION['Restaurant']}
-        />
-      )}
       {(createEntity === 'gerichte' || dialogState?.entity === 'gerichte') && (
         <GerichteDialog
           open={createEntity === 'gerichte' || dialogState?.entity === 'gerichte'}
@@ -588,6 +578,16 @@ export default function AdminPage() {
           restaurantList={(data as any).restaurant ?? []}
           enablePhotoScan={AI_PHOTO_SCAN['Gerichte']}
           enablePhotoLocation={AI_PHOTO_LOCATION['Gerichte']}
+        />
+      )}
+      {(createEntity === 'restaurant' || dialogState?.entity === 'restaurant') && (
+        <RestaurantDialog
+          open={createEntity === 'restaurant' || dialogState?.entity === 'restaurant'}
+          onClose={() => { setCreateEntity(null); setDialogState(null); }}
+          onSubmit={dialogState?.entity === 'restaurant' ? handleUpdate : (fields: any) => handleCreate('restaurant', fields)}
+          defaultValues={dialogState?.entity === 'restaurant' ? dialogState.record?.fields : undefined}
+          enablePhotoScan={AI_PHOTO_SCAN['Restaurant']}
+          enablePhotoLocation={AI_PHOTO_LOCATION['Restaurant']}
         />
       )}
       {(createEntity === 'bestellungen' || dialogState?.entity === 'bestellungen') && (
@@ -601,14 +601,6 @@ export default function AdminPage() {
           enablePhotoLocation={AI_PHOTO_LOCATION['Bestellungen']}
         />
       )}
-      {viewState?.entity === 'restaurant' && (
-        <RestaurantViewDialog
-          open={viewState?.entity === 'restaurant'}
-          onClose={() => setViewState(null)}
-          record={viewState?.record}
-          onEdit={(r: any) => { setViewState(null); setDialogState({ entity: 'restaurant', record: r }); }}
-        />
-      )}
       {viewState?.entity === 'gerichte' && (
         <GerichteViewDialog
           open={viewState?.entity === 'gerichte'}
@@ -616,6 +608,14 @@ export default function AdminPage() {
           record={viewState?.record}
           onEdit={(r: any) => { setViewState(null); setDialogState({ entity: 'gerichte', record: r }); }}
           restaurantList={(data as any).restaurant ?? []}
+        />
+      )}
+      {viewState?.entity === 'restaurant' && (
+        <RestaurantViewDialog
+          open={viewState?.entity === 'restaurant'}
+          onClose={() => setViewState(null)}
+          record={viewState?.record}
+          onEdit={(r: any) => { setViewState(null); setDialogState({ entity: 'restaurant', record: r }); }}
         />
       )}
       {viewState?.entity === 'bestellungen' && (

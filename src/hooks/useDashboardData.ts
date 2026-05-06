@@ -1,10 +1,10 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import type { Restaurant, Gerichte, Bestellungen } from '@/types/app';
+import type { Gerichte, Restaurant, Bestellungen } from '@/types/app';
 import { LivingAppsService } from '@/services/livingAppsService';
 
 export function useDashboardData() {
-  const [restaurant, setRestaurant] = useState<Restaurant[]>([]);
   const [gerichte, setGerichte] = useState<Gerichte[]>([]);
+  const [restaurant, setRestaurant] = useState<Restaurant[]>([]);
   const [bestellungen, setBestellungen] = useState<Bestellungen[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -12,13 +12,13 @@ export function useDashboardData() {
   const fetchAll = useCallback(async () => {
     setError(null);
     try {
-      const [restaurantData, gerichteData, bestellungenData] = await Promise.all([
-        LivingAppsService.getRestaurant(),
+      const [gerichteData, restaurantData, bestellungenData] = await Promise.all([
         LivingAppsService.getGerichte(),
+        LivingAppsService.getRestaurant(),
         LivingAppsService.getBestellungen(),
       ]);
-      setRestaurant(restaurantData);
       setGerichte(gerichteData);
+      setRestaurant(restaurantData);
       setBestellungen(bestellungenData);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Fehler beim Laden der Daten'));
@@ -33,13 +33,13 @@ export function useDashboardData() {
   useEffect(() => {
     async function silentRefresh() {
       try {
-        const [restaurantData, gerichteData, bestellungenData] = await Promise.all([
-          LivingAppsService.getRestaurant(),
+        const [gerichteData, restaurantData, bestellungenData] = await Promise.all([
           LivingAppsService.getGerichte(),
+          LivingAppsService.getRestaurant(),
           LivingAppsService.getBestellungen(),
         ]);
-        setRestaurant(restaurantData);
         setGerichte(gerichteData);
+        setRestaurant(restaurantData);
         setBestellungen(bestellungenData);
       } catch {
         // silently ignore — stale data is better than no data
@@ -50,17 +50,17 @@ export function useDashboardData() {
     return () => window.removeEventListener('dashboard-refresh', handleRefresh);
   }, []);
 
-  const restaurantMap = useMemo(() => {
-    const m = new Map<string, Restaurant>();
-    restaurant.forEach(r => m.set(r.record_id, r));
-    return m;
-  }, [restaurant]);
-
   const gerichteMap = useMemo(() => {
     const m = new Map<string, Gerichte>();
     gerichte.forEach(r => m.set(r.record_id, r));
     return m;
   }, [gerichte]);
 
-  return { restaurant, setRestaurant, gerichte, setGerichte, bestellungen, setBestellungen, loading, error, fetchAll, restaurantMap, gerichteMap };
+  const restaurantMap = useMemo(() => {
+    const m = new Map<string, Restaurant>();
+    restaurant.forEach(r => m.set(r.record_id, r));
+    return m;
+  }, [restaurant]);
+
+  return { gerichte, setGerichte, restaurant, setRestaurant, bestellungen, setBestellungen, loading, error, fetchAll, gerichteMap, restaurantMap };
 }

@@ -10,19 +10,6 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { lookupKey } from '@/lib/formatters';
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'altcha-widget': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
-        challengeurl?: string;
-        auto?: string;
-        hidelogo?: boolean;
-        hidefooter?: boolean;
-      }, HTMLElement>;
-    }
-  }
-}
-
 // Empty PROXY_BASE → relative URLs (dashboard and form-proxy share the domain).
 const PROXY_BASE = '';
 const APP_ID = '69e742e2cf5fc9c325cecbe7';

@@ -3,21 +3,6 @@
 export type LookupValue = { key: string; label: string };
 export type GeoLocation = { lat: number; long: number; info?: string };
 
-export interface Restaurant {
-  record_id: string;
-  createdat: string;
-  updatedat: string | null;
-  fields: {
-    restaurant_name?: string;
-    restaurant_tel?: string;
-    restaurant_url?: string;
-    lieferzeit?: string;
-    mindestbestellwert?: number;
-    lieferkosten?: number;
-    hinweise?: string;
-  };
-}
-
 export interface Gerichte {
   record_id: string;
   createdat: string;
@@ -31,6 +16,21 @@ export interface Gerichte {
     vegetarisch?: boolean;
     vegan?: boolean;
     allergene?: string;
+  };
+}
+
+export interface Restaurant {
+  record_id: string;
+  createdat: string;
+  updatedat: string | null;
+  fields: {
+    restaurant_name?: string;
+    restaurant_tel?: string;
+    restaurant_url?: string;
+    lieferzeit?: string;
+    mindestbestellwert?: number;
+    lieferkosten?: number;
+    hinweise?: string;
   };
 }
 
@@ -49,8 +49,8 @@ export interface Bestellungen {
 }
 
 export const APP_IDS = {
-  RESTAURANT: '69e742df70dfb1e5316788c9',
   GERICHTE: '69e742e2cf5fc9c325cecbe7',
+  RESTAURANT: '69e742df70dfb1e5316788c9',
   BESTELLUNGEN: '69e742e32ffc6b123a5e9512',
 } as const;
 
@@ -65,15 +65,6 @@ export const LOOKUP_OPTIONS: Record<string, Record<string, {key: string, label: 
 };
 
 export const FIELD_TYPES: Record<string, Record<string, string>> = {
-  'restaurant': {
-    'restaurant_name': 'string/text',
-    'restaurant_tel': 'string/tel',
-    'restaurant_url': 'string/url',
-    'lieferzeit': 'string/text',
-    'mindestbestellwert': 'number',
-    'lieferkosten': 'number',
-    'hinweise': 'string/textarea',
-  },
   'gerichte': {
     'restaurant_ref': 'applookup/select',
     'gericht_name': 'string/text',
@@ -83,6 +74,15 @@ export const FIELD_TYPES: Record<string, Record<string, string>> = {
     'vegetarisch': 'bool',
     'vegan': 'bool',
     'allergene': 'string/text',
+  },
+  'restaurant': {
+    'restaurant_name': 'string/text',
+    'restaurant_tel': 'string/tel',
+    'restaurant_url': 'string/url',
+    'lieferzeit': 'string/text',
+    'mindestbestellwert': 'number',
+    'lieferkosten': 'number',
+    'hinweise': 'string/textarea',
   },
   'bestellungen': {
     'vorname': 'string/text',
@@ -101,6 +101,6 @@ type StripLookup<T> = {
 };
 
 // Helper Types for creating new records (lookup fields as plain strings for API)
-export type CreateRestaurant = StripLookup<Restaurant['fields']>;
 export type CreateGerichte = StripLookup<Gerichte['fields']>;
+export type CreateRestaurant = StripLookup<Restaurant['fields']>;
 export type CreateBestellungen = StripLookup<Bestellungen['fields']>;

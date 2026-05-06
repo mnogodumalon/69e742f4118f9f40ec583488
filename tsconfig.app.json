@@ -31,6 +31,5 @@
       ]
     }
   },
-  "include": ["src"],
-  "exclude": ["src/pages/public"]
+  "include": ["src"]
 }

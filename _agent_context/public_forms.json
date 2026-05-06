@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "forms": [
+    {
+      "entity": "gerichte",
+      "app_id": "69e742e2cf5fc9c325cecbe7",
+      "path": "/rest/apps/69e742e2cf5fc9c325cecbe7/records",
+      "allowed_fields": [
+        "gericht_name",
+        "kategorie",
+        "beschreibung",
+        "preis",
+        "vegetarisch",
+        "vegan",
+        "allergene"
+      ],
+      "pow": true,
+      "pow_difficulty": 50000,
+      "title": "Gerichte — Formular"
+    },
+    {
+      "entity": "restaurant",
+      "app_id": "69e742df70dfb1e5316788c9",
+      "path": "/rest/apps/69e742df70dfb1e5316788c9/records",
+      "allowed_fields": [
+        "restaurant_name",
+        "restaurant_tel",
+        "restaurant_url",
+        "lieferzeit",
+        "mindestbestellwert",
+        "lieferkosten",
+        "hinweise"
+      ],
+      "pow": true,
+      "pow_difficulty": 50000,
+      "title": "Restaurant — Formular"
+    },
+    {
+      "entity": "bestellungen",
+      "app_id": "69e742e32ffc6b123a5e9512",
+      "path": "/rest/apps/69e742e32ffc6b123a5e9512/records",
+      "allowed_fields": [
+        "vorname",
+        "nachname",
+        "sonderwunsch",
+        "zahlungsart",
+        "bereits_bezahlt"
+      ],
+      "pow": true,
+      "pow_difficulty": 50000,
+      "title": "Bestellungen — Formular"
+    }
+  ]
+}
